@@ -1,0 +1,40 @@
+@startuml annotation 
+
+class Venta {
+    +numeroVenta
+    +fecha
+    +horaVenta
+    +calcularTotal()
+}
+class DetalleVenta {
+    +numeroDetalle
+    +cantidad
+    +precio
+    +calcularSubTotal()
+}
+class Producto {
+    +precioUnitario
+    +numeroProducto
+    +nombre
+    +stock
+}
+class Categoria {
+    +numeroCategoria
+    +nombre
+}
+class Empleados {
+    +legajo
+    +nombre
+    +apellido
+    +dni
+    +fechaNacimiento
+    +calcularEdad()
+}
+
+Venta *-> "1..*" DetalleVenta: detalleVenta
+DetalleVenta --> "1" Producto : producto
+Producto --> "1" Categoria: categoria
+Venta --> "1" Empleados: empleado
+
+
+@enduml 
