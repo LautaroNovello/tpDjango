@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:alpine
+    env_file:
+      - .env.db
+    environment:
+      - POSTGRES_INITDB_ARGS=--auth-host=md5 --auth-local=trust
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    networks:
+      - net
+
+  backend:
+    build: .
+    command: runserver 0.0.0.0:8000
+    entrypoint: python3 manage.py
+    env_file:
+      - .env.db
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/code
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - net
+
+  generate:
+    build: .
+    user: root
+    command: /bin/sh -c 'mkdir src && django-admin startproject app src'
+    env_file:
+      - .env.db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/code
+    networks:
+      - net
+
+  manage:
+    build: .
+    entrypoint: python3 manage.py
+    env_file:
+      - .env.db
+    volumes:
+      - ./src:/code
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - net
+
+networks:
+  net:
+
+volumes:
+  postgres-db:
