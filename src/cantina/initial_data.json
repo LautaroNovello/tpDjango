@@ -14,6 +14,20 @@
     }
   },
   {
+    "model": "cantina.categoria",
+    "pk": 3,
+    "fields": {
+      "nombre": "Snacks"
+    }
+  },
+  {
+    "model": "cantina.categoria",
+    "pk": 4,
+    "fields": {
+      "nombre": "Postres"
+    }
+  },
+  {
     "model": "cantina.producto",
     "pk": 1,
     "fields": {
@@ -34,6 +48,46 @@
     }
   },
   {
+    "model": "cantina.producto",
+    "pk": 3,
+    "fields": {
+      "nombre": "Pizza",
+      "precio": "500.00",
+      "stock": 30,
+      "categoria": 2
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 4,
+    "fields": {
+      "nombre": "Papas Fritas",
+      "precio": "200.00",
+      "stock": 70,
+      "categoria": 3
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 5,
+    "fields": {
+      "nombre": "Helado",
+      "precio": "250.00",
+      "stock": 40,
+      "categoria": 4
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 6,
+    "fields": {
+      "nombre": "Agua Mineral",
+      "precio": "100.00",
+      "stock": 120,
+      "categoria": 1
+    }
+  },
+  {
     "model": "cantina.empleado",
     "pk": 1,
     "fields": {
@@ -41,6 +95,26 @@
       "apellido": "Pérez",
       "dni": 12345678,
       "fecha_nacimiento": "1990-01-15"
+    }
+  },
+  {
+    "model": "cantina.empleado",
+    "pk": 2,
+    "fields": {
+      "nombre": "Ana",
+      "apellido": "Gómez",
+      "dni": 87654321,
+      "fecha_nacimiento": "1988-05-22"
+    }
+  },
+  {
+    "model": "cantina.empleado",
+    "pk": 3,
+    "fields": {
+      "nombre": "Luis",
+      "apellido": "Martínez",
+      "dni": 11223344,
+      "fecha_nacimiento": "1995-07-10"
     }
   },
   {
@@ -52,6 +126,22 @@
     }
   },
   {
+    "model": "cantina.venta",
+    "pk": 2,
+    "fields": {
+      "fecha_hora_venta": "2025-06-24T16:45:00Z",
+      "empleado": 2
+    }
+  },
+  {
+    "model": "cantina.venta",
+    "pk": 3,
+    "fields": {
+      "fecha_hora_venta": "2025-06-24T17:15:00Z",
+      "empleado": 3
+    }
+  },
+  {
     "model": "cantina.detalleventa",
     "pk": 1,
     "fields": {
@@ -59,6 +149,56 @@
       "precioHistorico": "150.00",
       "producto": 1,
       "venta": 1
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 2,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "350.00",
+      "producto": 2,
+      "venta": 1
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 3,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "500.00",
+      "producto": 3,
+      "venta": 2
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 4,
+    "fields": {
+      "cantidad": 3,
+      "precioHistorico": "200.00",
+      "producto": 4,
+      "venta": 2
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 5,
+    "fields": {
+      "cantidad": 2,
+      "precioHistorico": "250.00",
+      "producto": 5,
+      "venta": 3
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 6,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "100.00",
+      "producto": 6,
+      "venta": 3
     }
   }
 ]
