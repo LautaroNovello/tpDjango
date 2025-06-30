@@ -180,82 +180,8 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 ```
-## 3. Administracion de la aplicacion
-El archivo `admin.py` en cada aplicación de Django se utiliza para configurar qué modelos serán visibles y administrables desde el panel de administración de Django `(/admin)`.
-✅ Clase `DetalleVentaInline`
-```
-class DetalleVentaInline(admin.TabularInline):
-    model = DetalleVenta
-    readonly_fields = ('precioHistorico','total',)
-    fields = ('producto', 'cantidad', 'precioHistorico', 'total')
-    extra = 0
 
-```
-- Hereda de `admin.TabularInline`, que permite editar `DetalleVenta` dentro del admin de `Venta` en formato tabla.
-- `readonly_fields`: los campos `precioHistorico` y `total` son de solo lectura en el admin.
-- `fields`: indica qué campos mostrar en el inline, ya que si no se colocan explícitamente no aparecen.0
-- `extra = 0`: no muestra formularios vacíos adicionales por defecto.
-
-✅ Registro del modelo `Categoria`
-```
-@admin.register(Categoria)
-class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ('id_categoria', 'nombre')
-    search_fields = ('nombre',)
-```
-- `list_display`: muestra el `id` y `nombre` en la lista de categorías.
-- `search_fields`: permite buscar categorías por nombre.
-
-✅ Registro del modelo `Producto`
-```
-@admin.register(Producto)
-class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('id_producto', 'nombre', 'precio', 'stock', 'categoria')
-    list_filter = ('categoria',)
-    search_fields = ('nombre',)
-
-```
-- `list_filter`: permite filtrar productos por categoría.
-
-✅ Registro del modelo `Venta`
-```
-@admin.register(Venta)
-class VentaAdmin(admin.ModelAdmin):
-    list_display = ('id_venta', 'fecha_hora_venta', 'empleado', 'total_venta')
-    list_filter = ('fecha_hora_venta', 'empleado')
-    search_fields = ('empleado__nombre', 'empleado__apellido')
-    inlines = [DetalleVentaInline]
-
-    def total_venta(self, obj):
-        return obj.total()
-    total_venta.short_description = 'Total Venta'
-
-```
-- `inlines`: incluye `DetalleVentaInline` para poder agregar o editar detalles de venta directamente dentro de cada venta.
-- `total_venta`: método para mostrar el total de la venta en la lista de ventas, calculado usando `obj.total()` del modelo.
-✅ Registro del modelo `DetalleVenta`
-```
-@admin.register(DetalleVenta)
-class DetalleVentaAdmin(admin.ModelAdmin):
-    list_display = ('id_detalleVenta', 'producto', 'venta', 'cantidad', 'precioHistorico', 'total')
-    list_filter = ('producto',)
-    search_fields = ('producto__nombre',)
-
-    def total(self, obj):
-        return obj.total
-    total.short_description = 'Total Detalle'
-
-```
-- Método `total`: retorna el subtotal del detalle (`cantidad * precioHistorico`), usando la propiedad `total` del modelo, para mostrarlo en la lista del admin.
-
-✅ Registro del modelo `Empleado`
-```
-@admin.register(Empleado)
-class EmpleadoAdmin(admin.ModelAdmin):
-    list_display = ('id_empleado', 'nombre', 'apellido', 'dni', 'fecha_nacimiento')
-    search_fields = ('nombre', 'apellido', 'dni')
-```
-## 4. Crear y cargar datos iniciales
+## 3. Crear y cargar datos iniciales
 Creamos la carpeta `./src/cantina` y agregamos el archivo `initial_data.json` y cargamos los siguientes datos:
 ```
 [
@@ -463,7 +389,7 @@ Creamos la carpeta `./src/cantina` y agregamos el archivo `initial_data.json` y 
   }
 ]
 ```
-## 5. Definimos el archivos .init
+## 4. Definimos el archivos .init
 Este archivo nos sirve para automatizar comandos, evitando ejecutarlos uno por uno manualmente.
 - En Windows, usar extensión `.ps1`
 - En Linux, usar extensión `.sh`
@@ -476,6 +402,81 @@ docker compose up backend -d
 docker compose run --rm manage createsuperuser --noinput --username admin --email admin@example.com
 docker compose run --rm manage shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u=User.objects.get(username='admin'); u.set_password('admin'); u.save()"
 docker compose run --rm manage loaddata cantina/initial_data.json
+```
+## 5. Administracion de la aplicacion
+El archivo `admin.py` en cada aplicación de Django se utiliza para configurar qué modelos serán visibles y administrables desde el panel de administración de Django `(/admin)`.
+✅ Clase `DetalleVentaInline`
+```
+class DetalleVentaInline(admin.TabularInline):
+    model = DetalleVenta
+    readonly_fields = ('precioHistorico','total',)
+    fields = ('producto', 'cantidad', 'precioHistorico', 'total')
+    extra = 0
+
+```
+- Hereda de `admin.TabularInline`, que permite editar `DetalleVenta` dentro del admin de `Venta` en formato tabla.
+- `readonly_fields`: los campos `precioHistorico` y `total` son de solo lectura en el admin.
+- `fields`: indica qué campos mostrar en el inline, ya que si no se colocan explícitamente no aparecen.0
+- `extra = 0`: no muestra formularios vacíos adicionales por defecto.
+
+✅ Registro del modelo `Categoria`
+```
+@admin.register(Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    list_display = ('id_categoria', 'nombre')
+    search_fields = ('nombre',)
+```
+- `list_display`: muestra el `id` y `nombre` en la lista de categorías.
+- `search_fields`: permite buscar categorías por nombre.
+
+✅ Registro del modelo `Producto`
+```
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ('id_producto', 'nombre', 'precio', 'stock', 'categoria')
+    list_filter = ('categoria',)
+    search_fields = ('nombre',)
+
+```
+- `list_filter`: permite filtrar productos por categoría.
+
+✅ Registro del modelo `Venta`
+```
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    list_display = ('id_venta', 'fecha_hora_venta', 'empleado', 'total_venta')
+    list_filter = ('fecha_hora_venta', 'empleado')
+    search_fields = ('empleado__nombre', 'empleado__apellido')
+    inlines = [DetalleVentaInline]
+
+    def total_venta(self, obj):
+        return obj.total()
+    total_venta.short_description = 'Total Venta'
+
+```
+- `inlines`: incluye `DetalleVentaInline` para poder agregar o editar detalles de venta directamente dentro de cada venta.
+- `total_venta`: método para mostrar el total de la venta en la lista de ventas, calculado usando `obj.total()` del modelo.
+✅ Registro del modelo `DetalleVenta`
+```
+@admin.register(DetalleVenta)
+class DetalleVentaAdmin(admin.ModelAdmin):
+    list_display = ('id_detalleVenta', 'producto', 'venta', 'cantidad', 'precioHistorico', 'total')
+    list_filter = ('producto',)
+    search_fields = ('producto__nombre',)
+
+    def total(self, obj):
+        return obj.total
+    total.short_description = 'Total Detalle'
+
+```
+- Método `total`: retorna el subtotal del detalle (`cantidad * precioHistorico`), usando la propiedad `total` del modelo, para mostrarlo en la lista del admin.
+
+✅ Registro del modelo `Empleado`
+```
+@admin.register(Empleado)
+class EmpleadoAdmin(admin.ModelAdmin):
+    list_display = ('id_empleado', 'nombre', 'apellido', 'dni', 'fecha_nacimiento')
+    search_fields = ('nombre', 'apellido', 'dni')
 ```
 ## 6. Para ejecutar el proyecto
 1. Bajamos el repositorio
