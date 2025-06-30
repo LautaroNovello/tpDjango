@@ -76,22 +76,8 @@ volumes:
   postgres-db:
 ```
 
-## 2. Definimos el archivos .init
-Este archivo nos sirve para automatizar comandos, evitando ejecutarlos uno por uno manualmente.
-- En Windows, usar extensión `.ps1`
-- En Linux, usar extensión `.sh`
 
-```
-docker compose down -v --remove-orphans --rmi all
-docker compose run --rm manage makemigrations
-docker compose run --rm manage migrate
-docker compose up backend -d
-docker compose run --rm manage createsuperuser --noinput --username admin --email admin@example.com
-docker compose run --rm manage shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u=User.objects.get(username='admin'); u.set_password('admin'); u.save()"
-docker compose run --rm manage loaddata cantina/initial_data.json
-```
-
-## 3. Modelado de la aplicacion
+## 2. Modelado de la aplicacion
 En el archivo `models.py` definimos los modelos de nuestra base de datos para luego migrarlos con Django.- Clase Categoria
 ```
 class Categoria(models.Model):
@@ -194,7 +180,7 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 ```
-## 4. Administracion de la aplicacion
+## 3. Administracion de la aplicacion
 El archivo `admin.py` en cada aplicación de Django se utiliza para configurar qué modelos serán visibles y administrables desde el panel de administración de Django `(/admin)`.
 ✅ Clase `DetalleVentaInline`
 ```
@@ -269,13 +255,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('id_empleado', 'nombre', 'apellido', 'dni', 'fecha_nacimiento')
     search_fields = ('nombre', 'apellido', 'dni')
 ```
-## 5. Para ejecutar el proyecto
-1. Bajamos el repositorio
-2. En la terminal ejecutamos `docker compose up -d`
-3. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `.\init.sh` en Linux
-4. Abrimos `http://localhost:8000/admin/`, donde vemos los cambios realziados en la app pero todavia sin datos pre cargados.
-
-## 6. Crear y cargar datos iniciales
+## 4. Crear y cargar datos iniciales
 Creamos la carpeta `./src/cantina` y agregamos el archivo `initial_data.json` y cargamos los siguientes datos:
 ```
 [
@@ -483,6 +463,26 @@ Creamos la carpeta `./src/cantina` y agregamos el archivo `initial_data.json` y 
   }
 ]
 ```
+## 5. Definimos el archivos .init
+Este archivo nos sirve para automatizar comandos, evitando ejecutarlos uno por uno manualmente.
+- En Windows, usar extensión `.ps1`
+- En Linux, usar extensión `.sh`
+
+```
+docker compose down -v --remove-orphans --rmi all
+docker compose run --rm manage makemigrations
+docker compose run --rm manage migrate
+docker compose up backend -d
+docker compose run --rm manage createsuperuser --noinput --username admin --email admin@example.com
+docker compose run --rm manage shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u=User.objects.get(username='admin'); u.set_password('admin'); u.save()"
+docker compose run --rm manage loaddata cantina/initial_data.json
+```
+## 6. Para ejecutar el proyecto
+1. Bajamos el repositorio
+2. En la terminal ejecutamos `docker compose up -d`
+3. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `.\init.sh` en Linux
+4. Abrimos `http://localhost:8000/admin/`, donde vemos los cambios realziados en la app pero todavia sin datos pre cargados.
+
 
 
 
