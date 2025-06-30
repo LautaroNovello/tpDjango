@@ -1,10 +1,17 @@
-## 1.Creacion del proyecto
+## 1. Creacion del proyecto
 Creamos una carpeta de nuestro proyecto, en nuestro caso cantina
 ```
 mkdir cantina
 cd cantina/
 ```
-## 2. Creación del Dockerfile
+## 2. Creacion de dependencias
+Crear un archivo requirements.txt para listar las dependencias necesarias
+```
+# requirements.txt
+Django
+psycopg[binary]  # Driver para PostgreSQL
+```
+## 3. Creación del Dockerfile
 Lo primero que hacemos es definir el docker-compose.yaml, donde levantamos 4 contenedor:
 - 🗄️ **Base de datos:** PostgreSQL
 - 🖥️ **Backend:** Django
@@ -80,13 +87,6 @@ networks:
 volumes:
   postgres-db:
 ```
-## 3. Creacion de dependencias
-Crear un archivo requirements.txt para listar las dependencias necesarias
-```
-# requirements.txt
-Django
-psycopg[binary]  # Driver para PostgreSQL
-```
 
 ## 4. Definimos el archivos .init
 Este archivo nos sirve para automatizar comandos, evitando ejecutarlos uno por uno manualmente.
@@ -102,8 +102,9 @@ docker compose run --rm manage createsuperuser --noinput --username admin --emai
 docker compose run --rm manage shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u=User.objects.get(username='admin'); u.set_password('admin'); u.save()"
 docker compose run --rm manage loaddata cantina/initial_data.json
 ```
-## 5. Definimos el archivos models.py
-En este archivo definimos los modelos de nuestra base de datos para luego migrarlos con Django.- Clase Categoria
+
+## 5. Modelado de la aplicacion
+En el archivo `models.py` definimos los modelos de nuestra base de datos para luego migrarlos con Django.- Clase Categoria
 ```
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
@@ -205,7 +206,7 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 ```
-## 6. Definos el archivo admin.py
+## 6. Administracion de la aplicacion
 El archivo `admin.py` en cada aplicación de Django se utiliza para configurar qué modelos serán visibles y administrables desde el panel de administración de Django `(/admin)`.
 ✅ Clase `DetalleVentaInline`
 ```
@@ -284,6 +285,216 @@ class EmpleadoAdmin(admin.ModelAdmin):
 1. Bajamos el repositorio
 2. En la terminal ejecutamos `docker compose up -d`
 3. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `.\init.sh` en Linux
-4. Abrimos `http://localhost:8000/admin/`
+4. Abrimos `http://localhost:8000/admin/`, donde vemos los cambios realziados en la app pero todavia sin datos pre cargados.
+
+## 8. Crear y cargar datos iniciales
+Creamos la carpeta `./src/cantina` y agregamos el archivo `initial_data.json` y cargamos los siguientes datos:
+```
+[
+  {
+    "model": "cantina.categoria",
+    "pk": 1,
+    "fields": {
+      "nombre": "Bebidas"
+    }
+  },
+  {
+    "model": "cantina.categoria",
+    "pk": 2,
+    "fields": {
+      "nombre": "Comida"
+    }
+  },
+  {
+    "model": "cantina.categoria",
+    "pk": 3,
+    "fields": {
+      "nombre": "Snacks"
+    }
+  },
+  {
+    "model": "cantina.categoria",
+    "pk": 4,
+    "fields": {
+      "nombre": "Postres"
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 1,
+    "fields": {
+      "nombre": "Coca Cola",
+      "precio": "150.00",
+      "stock": 100,
+      "categoria": 1
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 2,
+    "fields": {
+      "nombre": "Hamburguesa",
+      "precio": "350.00",
+      "stock": 50,
+      "categoria": 2
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 3,
+    "fields": {
+      "nombre": "Pizza",
+      "precio": "500.00",
+      "stock": 30,
+      "categoria": 2
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 4,
+    "fields": {
+      "nombre": "Papas Fritas",
+      "precio": "200.00",
+      "stock": 70,
+      "categoria": 3
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 5,
+    "fields": {
+      "nombre": "Helado",
+      "precio": "250.00",
+      "stock": 40,
+      "categoria": 4
+    }
+  },
+  {
+    "model": "cantina.producto",
+    "pk": 6,
+    "fields": {
+      "nombre": "Agua Mineral",
+      "precio": "100.00",
+      "stock": 120,
+      "categoria": 1
+    }
+  },
+  {
+    "model": "cantina.empleado",
+    "pk": 1,
+    "fields": {
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "dni": 12345678,
+      "fecha_nacimiento": "1990-01-15"
+    }
+  },
+  {
+    "model": "cantina.empleado",
+    "pk": 2,
+    "fields": {
+      "nombre": "Ana",
+      "apellido": "Gómez",
+      "dni": 87654321,
+      "fecha_nacimiento": "1988-05-22"
+    }
+  },
+  {
+    "model": "cantina.empleado",
+    "pk": 3,
+    "fields": {
+      "nombre": "Luis",
+      "apellido": "Martínez",
+      "dni": 11223344,
+      "fecha_nacimiento": "1995-07-10"
+    }
+  },
+  {
+    "model": "cantina.venta",
+    "pk": 1,
+    "fields": {
+      "fecha_hora_venta": "2025-06-24T15:30:00Z",
+      "empleado": 1
+    }
+  },
+  {
+    "model": "cantina.venta",
+    "pk": 2,
+    "fields": {
+      "fecha_hora_venta": "2025-06-24T16:45:00Z",
+      "empleado": 2
+    }
+  },
+  {
+    "model": "cantina.venta",
+    "pk": 3,
+    "fields": {
+      "fecha_hora_venta": "2025-06-24T17:15:00Z",
+      "empleado": 3
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 1,
+    "fields": {
+      "cantidad": 2,
+      "precioHistorico": "150.00",
+      "producto": 1,
+      "venta": 1
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 2,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "350.00",
+      "producto": 2,
+      "venta": 1
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 3,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "500.00",
+      "producto": 3,
+      "venta": 2
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 4,
+    "fields": {
+      "cantidad": 3,
+      "precioHistorico": "200.00",
+      "producto": 4,
+      "venta": 2
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 5,
+    "fields": {
+      "cantidad": 2,
+      "precioHistorico": "250.00",
+      "producto": 5,
+      "venta": 3
+    }
+  },
+  {
+    "model": "cantina.detalleventa",
+    "pk": 6,
+    "fields": {
+      "cantidad": 1,
+      "precioHistorico": "100.00",
+      "producto": 6,
+      "venta": 3
+    }
+  }
+]
+```
+
 
 
