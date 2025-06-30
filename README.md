@@ -258,6 +258,7 @@ class DetalleVentaAdmin(admin.ModelAdmin):
 
 ```
 - Método `total`: retorna el subtotal del detalle (`cantidad * precioHistorico`), usando la propiedad `total` del modelo, para mostrarlo en la lista del admin.
+
 ✅ Registro del modelo `Empleado`
 ```
 @admin.register(Empleado)
