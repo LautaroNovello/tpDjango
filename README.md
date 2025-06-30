@@ -1,4 +1,10 @@
-## 1. Creación del Dockerfile
+## 1.Creacion del proyecto
+Creamos una carpeta de nuestro proyecto, en nuestro caso cantina
+```
+mkdir cantina
+cd cantina/
+```
+## 2. Creación del Dockerfile
 Lo primero que hacemos es definir el docker-compose.yaml, donde levantamos 4 contenedor:
 - 🗄️ **Base de datos:** PostgreSQL
 - 🖥️ **Backend:** Django
@@ -74,7 +80,15 @@ networks:
 volumes:
   postgres-db:
 ```
-## 2. Definimos el archivos .init
+## 3. Creacion de dependencias
+Crear un archivo requirements.txt para listar las dependencias necesarias
+```
+# requirements.txt
+Django
+psycopg[binary]  # Driver para PostgreSQL
+```
+
+## 4. Definimos el archivos .init
 Este archivo nos sirve para automatizar comandos, evitando ejecutarlos uno por uno manualmente.
 - En Windows, usar extensión `.ps1`
 - En Linux, usar extensión `.sh`
@@ -88,7 +102,7 @@ docker compose run --rm manage createsuperuser --noinput --username admin --emai
 docker compose run --rm manage shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u=User.objects.get(username='admin'); u.set_password('admin'); u.save()"
 docker compose run --rm manage loaddata cantina/initial_data.json
 ```
-## 3. Definimos el archivos models.py
+## 5. Definimos el archivos models.py
 En este archivo definimos los modelos de nuestra base de datos para luego migrarlos con Django.- Clase Categoria
 ```
 class Categoria(models.Model):
@@ -191,7 +205,7 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 ```
-## 4. Definos el archivo admin.py
+## 6. Definos el archivo admin.py
 El archivo `admin.py` en cada aplicación de Django se utiliza para configurar qué modelos serán visibles y administrables desde el panel de administración de Django `(/admin)`.
 ✅ Clase `DetalleVentaInline`
 ```
@@ -266,7 +280,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('id_empleado', 'nombre', 'apellido', 'dni', 'fecha_nacimiento')
     search_fields = ('nombre', 'apellido', 'dni')
 ```
-## 5. Para ejecutar el proyecto
+## 7. Para ejecutar el proyecto
 1. Bajamos el repositorio
 2. En la terminal ejecutamos `docker compose up -d`
 3. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `.\init.sh` en Linux
