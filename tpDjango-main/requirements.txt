@@ -1,0 +1,4 @@
+# requirements.txt
+Django
+psycopg[binary]  # Driver para PostgreSQL
+mongoengine  # ORM para MongoDB
