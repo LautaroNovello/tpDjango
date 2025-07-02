@@ -7,69 +7,86 @@ sys.path.append("/code")
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
 django.setup()
-# IMPORTS DE DJANGO (MODELOS RELACIONALES)
-from cantina.models import (Venta)
+# Estos imports deben hacerse despues de django.setup()
+from cantina.models import (Venta,DetalleVenta,Producto,Categoria,Empleado)
+from modelos_mongo import Venta as VentaMongo #importamos asi no tenemos probleam con venta del modelo psql
+from modelos_mongo import (DetalleVentaEmb,ProductoDoc,CategoriaDoc,EmpleadoDoc)
 
-
-# IMPORTS DE MONGOENGINE (DOCUMENTOS EMBEBIDOS)
-from modelos_mongo import Venta as VentaMongo
-from modelos_mongo import (DetalleVentaEmb,ProductoEmb,CategoriaEmb,EmpleadoEmb)
-
-# MIGRAR VENTAS UNA POR UNA
+# migrar ventas una por una
 for venta_sql in Venta.objects.all():
-    print(venta_sql)
-    # === MIGRAR EMPLEADO ===
-    empleado_sql = venta_sql.empleado
-    empleado_emb = None
-    if empleado_sql:
-        empleado_emb = EmpleadoEmb(
-            id_empleado=empleado_sql.id_empleado,
-            nombre=empleado_sql.nombre,
-            apellido=empleado_sql.apellido,
-            dni=empleado_sql.dni,
-            fecha_nacimiento=empleado_sql.fecha_nacimiento
-        )
 
-    # === MIGRAR DETALLES ===
+    # aniadir empleado
+    empleado_sql = venta_sql.empleado
+    empleado_id = None #declaro el empleado antes de asignarlo a al documento de empleado,por si no lo encuentra
+    if empleado_sql:
+        empleado_id = empleado_sql.id_empleado
+
+    # migracion de detalles
     detalles_emb = []
     for detalle_sql in venta_sql.detalles.all():
         producto_sql = detalle_sql.producto
         categoria_sql = producto_sql.categoria
 
-        # CATEGORIA embebida
-
-        categoria_emb = CategoriaEmb(
-            id_categoria=categoria_sql.id_categoria,
-            nombre=categoria_sql.nombre
-        )
-
-        # PRODUCTO embebido
-        producto_emb = ProductoEmb(
-            id_producto=producto_sql.id_producto,
-            nombre=producto_sql.nombre,
-            precio=producto_sql.precio,
-            stock=producto_sql.stock,
-            categoria=categoria_emb
-        )
-        print(producto_emb)
-
-        # DETALLE embebido
+        # creacion del documento embedded de detalle venta
         detalle_emb = DetalleVentaEmb(
             id_detalleVenta=detalle_sql.id_detalleVenta,
             cantidad=detalle_sql.cantidad,
-            precioHistorico=detalle_sql.precioHistorico,
-            producto=producto_emb
+            subtotal=detalle_sql.precioHistorico * detalle_sql.cantidad,  # Guardamos el subtotal
+            producto= producto_sql.id_producto 
         )
 
         detalles_emb.append(detalle_emb)
 
-    # === CREAR DOCUMENTO DE VENTA ===
-    venta_mongo = VentaMongo(
+    # creacion del documento de venta 
+    ventas = VentaMongo(
         id_venta=venta_sql.id_venta,
         fecha_hora_venta=venta_sql.fecha_hora_venta,
-        empleado=empleado_emb,
+        empleado=empleado_id,
         detalles=detalles_emb
     )
 
-    venta_mongo.save()
-    print(f"Venta {venta_sql.id_venta} migrada a MongoDB")
+    ventas.save()
+
+
+
+#Migracion de productos
+productos_emb = Producto.objects.all()
+#Migramos solo los productos que no existen(migracion incremental)
+for producto in productos_emb:
+    if not ProductoDoc.objects.filter(id_producto=producto.id_producto).first():
+        productos = ProductoDoc(
+            id_producto=producto.id_producto,
+            nombre=producto.nombre,
+            precio=producto.precio,
+            stock=producto.stock,
+            categoria = producto.categoria.id_categoria  # Asignamos la referencia a la categoria
+        )
+        productos.save()
+        print("Producto migrado")
+
+#Migracion de categorias
+categorias_emb = Categoria.objects.all()
+for categoria in categorias_emb:
+    if not CategoriaDoc.objects.filter(id_categoria=categoria.id_categoria).first():
+        categorias = CategoriaDoc(
+            id_categoria=categoria.id_categoria, 
+            nombre=categoria.nombre)
+        categorias.save()
+        print("Categoria migrada")
+
+#Migracion de empleados
+empleados_emb = Empleado.objects.all()
+for empleado in empleados_emb:
+    if not EmpleadoDoc.objects.filter(id_empleado=empleado.id_empleado).first():
+        empleados = EmpleadoDoc(
+            id_empleado=empleado.id_empleado,
+            nombre=empleado.nombre,
+            apellido=empleado.apellido,
+            dni=empleado.dni,
+            fecha_nacimiento=empleado.fecha_nacimiento
+        )
+        empleados.save()
+        print("Empleado migrado")
+
+
+
