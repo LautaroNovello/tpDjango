@@ -34,7 +34,7 @@ docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_
 
 ---
 
-## **Visualizar los datos en Mongo**
+## 🔍 Visualizar los datos en Mongo
 
 Entrar en la consola de mongo:
 ```bash
