@@ -29,7 +29,7 @@ Para ejecutar el proceso de migración, utilizar el siguiente comando en la raí
 
 ```bash
 docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py
-
+´´´
 ---
 
 ## Visualizar los datos en Mongo
