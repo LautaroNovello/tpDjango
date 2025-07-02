@@ -46,13 +46,13 @@ show dbs
 ```
 Entrar en una base de datos:
 ```bash
-use ventas
+use cantina
 ```
-Mostrar todos los documentos de esa base de datos:
+Mostrar las colecciones de esa base de datos(el símil a las tablas en relacionales):
+```bash
+show collections
+```
+Mostrar todos los datos de esa colección:
 ```bash
 db.venta.find()
 ```
-
-
-
-
