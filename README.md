@@ -33,9 +33,13 @@ docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_
 
 ## Visualizar los datos en Mongo
 
+Entrar en la consola de mongo:
 docker compose exec mongo mongosh
+Mostrar las bases de datos:
 show dbs
+Entrar en una base de datos:
 use ventas
+Mostrar todos los documentos de esa base de datos:
 db.venta.find()
 
 
