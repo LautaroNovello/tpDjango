@@ -8,7 +8,7 @@ Este proyecto permite migrar datos desde una base de datos relacional en Postgre
 
 Antes de realizar la migración, es necesario asegurarse de lo siguiente:
 
-1. Haber seguido correctamente las instrucciones del `README` del proyecto principal (`main`), lo cual incluye levantar el entorno completo.Si nos dice que algún puerto ya está en uso,podemos ejecutar el siguiente comando para reiniciar docker:
+1. Haber seguido correctamente las instrucciones del `README` del proyecto principal (`main`), lo cual incluye levantar el entorno completo.Si nos dice que algún puerto ya está en uso,podemos ejecutar el siguiente comando para reiniciar docker de **manera opcional**:
    ```bash
    systemctl restart docker
    ```
