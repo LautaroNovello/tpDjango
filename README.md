@@ -12,6 +12,7 @@ Antes de realizar la migración, es necesario asegurarse de lo siguiente:
 2. Que el contenedor de MongoDB esté funcionando correctamente.
 3. Tener en ejecución los **3 contenedores necesarios** del proyecto mediante Docker Compose.
 4. Tener añadido MongoEngine en requirements.txt
+5. Si el puerto ya esta asignado, ejecutar: sudo systemctl restart docker
 
 ---
 
@@ -33,6 +34,7 @@ docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_
 
 ## Visualizar los datos en Mongo
 
+
 Entrar en la consola de mongo:
 docker compose exec mongo mongosh
 Mostrar las bases de datos:
@@ -41,6 +43,8 @@ Entrar en una base de datos:
 use ventas
 Mostrar todos los documentos de esa base de datos:
 db.venta.find()
+
+
 
 
 
