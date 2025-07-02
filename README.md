@@ -25,8 +25,8 @@ Una vez que los datos están listos,podremos hacer la migración a Mongo, tan so
 ## 🚀 Comando para ejecutar la migración
 
 Para ejecutar el proceso de migración, utilizar el siguiente comando en la raíz del proyecto:
-
-`docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py`
+```bash
+docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py```
 
 ---
 
