@@ -8,13 +8,10 @@ Este proyecto permite migrar datos desde una base de datos relacional en Postgre
 
 Antes de realizar la migración, es necesario asegurarse de lo siguiente:
 
-1. Haber seguido correctamente las instrucciones del `README` del proyecto principal (`main`), lo cual incluye levantar el entorno completo.Si nos dice que algún puerto ya está en uso,podemos ejecutar el siguiente comando para reiniciar docker:
-   ```bash
-   systemctl restart docker
-   
-3. Veriifcar que los **3 contenedores necesarios** esten corriendo apropiadamente.
-4. Tener añadido MongoEngine en requirements.txt
-5. Tener añadido el comando que ejecuta el servicio de mongo en el docker-compose.yaml
+1. Haber seguido correctamente las instrucciones del `README` del proyecto principal (`main`), lo cual incluye levantar el entorno completo.Si nos dice que algún puerto ya está en uso,podemos ejecutar el siguiente comando para reiniciar docker: `systemctl restart docker`
+2. Veriifcar que los **3 contenedores necesarios** esten corriendo apropiadamente.
+3. Tener añadido MongoEngine en requirements.txt
+4. Tener añadido el comando que ejecuta el servicio de mongo en el docker-compose.yaml
    
 ---
 
@@ -33,17 +30,17 @@ Para ejecutar el proceso de migración, utilizar el siguiente comando en la raí
 docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py
 
 ---
-## Visualizar los datos en Mongo
 
+## **Visualizar los datos en Mongo**
 
 Entrar en la consola de mongo:
-docker compose exec mongo mongosh
+`docker compose exec mongo mongosh`
 Mostrar las bases de datos:
-show dbs
+`show dbs`
 Entrar en una base de datos:
-use ventas
+`use ventas`
 Mostrar todos los documentos de esa base de datos:
-db.venta.find()
+`db.venta.find()`
 
 
 
