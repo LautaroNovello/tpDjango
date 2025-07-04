@@ -80,9 +80,9 @@ Antes de realizar la migración, debemos asegurarnos de contar con lo siguiente:
 ===================================================
 Al levantar el entorno, se precargan varias entidades en la base de datos PostgreSQL mediante fixtures o datos insertados por Django.
 1. El entorno se levanta con:
-   ´´´bash
+   ```bash
     docker compose up -d
-    ´´´
+    ```
 
 Podés agregar más datos desde:
 
@@ -98,9 +98,9 @@ Este script realiza una migración incremental: solo incluye los datos nuevos o 
 ===================================================
 
 Desde la raíz del proyecto, ejecutar:
-
+```bash
 docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py
-
+```
 Este comando corre el script Python dentro del contenedor manage (Django).
 
 ===================================================
