@@ -108,16 +108,22 @@ Este comando corre el script Python dentro del contenedor manage (Django).
 ===================================================
 
 Ingresar al shell de MongoDB con:
-
+```bash
 docker compose exec mongo mongosh
-
+```
 Luego, ejecutar:
-
+``` bash
 > show dbs
+```
+```bash
 > use cantina
+```
+``` bash
 > show collections
+```
+``` bash
 > db.venta.find()
-
+```
 ===================================================
 ✅ VENTAJAS DE MongoDB CON MONGOENGINE
 ===================================================
