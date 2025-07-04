@@ -480,9 +480,8 @@ class EmpleadoAdmin(admin.ModelAdmin):
 ```
 ## 6. Para ejecutar el proyecto
 1. Bajamos el repositorio
-2. En la terminal ejecutamos `docker compose up -d`
-3. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `.\init.sh` en Linux
-4. Abrimos `http://localhost:8000/admin/`, donde vemos los cambios realziados en la app pero todavia sin datos pre cargados.
+2. Luego, ejecutamos `.\init.ps1` en caso de estar en Windows y `./init.sh` en Linux
+3. Abrimos `http://localhost:8000/admin/`, donde vemos los cambios realziados en la app pero todavia sin datos pre cargados.
 
 
 
