@@ -1,12 +1,12 @@
 ===================================================
-📦 MIGRACIÓN DE DATOS DE POSTGRESQL A MONGODB
+ MIGRACIÓN DE DATOS DE POSTGRESQL A MONGODB
 ===================================================
 Este módulo permite migrar los datos generados en una base de datos relacional (PostgreSQL) hacia una base 
 de datos documental (MongoDB), utilizando Python, Docker y el ODM MongoEngine. Es ideal para mantener 
 actualizada una réplica en Mongo de los datos gestionados originalmente por Django y PostgreSQL.
 
 ===================================================
-🧠 ¿QUÉ ES MONGO ENGINE?
+¿QUÉ ES MONGO ENGINE?
 ===================================================
 MongoEngine es un Object-Document Mapper (ODM), que funciona como un "ORM para MongoDB". Mientras que un ORM 
 (Object-Relational Mapper) como el de Django permite interactuar con bases de datos relacionales (como PostgreSQL)
@@ -76,7 +76,7 @@ Antes de realizar la migración, debemos asegurarnos de contar con lo siguiente:
     - Si no existen, los inserta.
 
 ===================================================
- 🗃️ DESCRIPCIÓN DEL PROCESO
+ DESCRIPCIÓN DEL PROCESO
 ===================================================
 Al levantar el entorno, se precargan varias entidades en la base de datos PostgreSQL mediante fixtures o datos insertados por Django.
 1. El entorno se levanta con:
@@ -94,7 +94,7 @@ Cuando los datos estén listos para ser migrados, simplemente ejecutás un scrip
 Este script realiza una migración incremental: solo incluye los datos nuevos o modificados.
 
 ===================================================
-🚀 COMANDO PARA EJECUTAR LA MIGRACIÓN
+ COMANDO PARA EJECUTAR LA MIGRACIÓN
 ===================================================
 
 Desde la raíz del proyecto, ejecutar:
@@ -104,7 +104,7 @@ docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_
 Este comando corre el script Python dentro del contenedor manage (Django).
 
 ===================================================
-📄 VISUALIZAR LOS DATOS EN MONGODB
+ VISUALIZAR LOS DATOS EN MONGODB
 ===================================================
 
 Ingresar al shell de MongoDB con:
@@ -148,7 +148,7 @@ Luego, ejecutar:
 
 **Menor integración con Django nativo: No reemplaza el ORM de Django, sino que se usa por fuera para otras tareas.
 ===================================================
-🔄 CONCLUSIÓN
+ CONCLUSIÓN
 ===================================================
 
 - El script puede ejecutarse múltiples veces sin duplicar datos.
