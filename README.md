@@ -81,7 +81,8 @@ Antes de realizar la migración, debemos asegurarnos de contar con lo siguiente:
 Al levantar el entorno, se precargan varias entidades en la base de datos PostgreSQL mediante fixtures o datos insertados por Django.
 1. El entorno se levanta con:
    ´´´bash
-    docker compose up
+    docker compose up -d
+    ´´´
 
 Podés agregar más datos desde:
 
