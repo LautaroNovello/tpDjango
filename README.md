@@ -1,58 +1,150 @@
-# Migración de Datos de PostgreSQL a MongoDB
+===================================================
+📦 MIGRACIÓN DE DATOS DE POSTGRESQL A MONGODB
+===================================================
+Este módulo permite migrar los datos generados en una base de datos relacional (PostgreSQL) hacia una base 
+de datos documental (MongoDB), utilizando Python, Docker y el ODM MongoEngine. Es ideal para mantener 
+actualizada una réplica en Mongo de los datos gestionados originalmente por Django y PostgreSQL.
 
-Este proyecto permite migrar datos desde una base de datos relacional en PostgreSQL a una base de datos documental en MongoDB, utilizando un script de python.
+===================================================
+🧠 ¿QUÉ ES MONGO ENGINE?
+===================================================
+MongoEngine es un Object-Document Mapper (ODM), que funciona como un "ORM para MongoDB". Mientras que un ORM 
+(Object-Relational Mapper) como el de Django permite interactuar con bases de datos relacionales (como PostgreSQL)
+usando objetos Python, MongoEngine cumple la misma función pero para bases de datos documentales como MongoDB. En otras 
+palabras, MongoEngine nos ayuda a traducir los modelos relacionales de Django a documentos Mongo.
 
----
+MongoDB no utiliza tablas ni relaciones como una base SQL; en su lugar, guarda información en documentos con estructura 
+JSON agrupados en colecciones. MongoEngine nos permite:
 
-## 🔧 Requisitos previos
+**Definir documentos MongoDB como clases en Python.
 
-Antes de realizar la migración, es necesario asegurarse de lo siguiente:
+**Validar automáticamente los tipos de datos.
 
-1. Haber seguido correctamente las instrucciones del `README` del proyecto principal (`main`), lo cual incluye levantar el entorno completo.Si nos dice que algún puerto ya está en uso,podemos ejecutar el siguiente comando para reiniciar docker de **manera opcional**:
-   ```bash
-   systemctl restart docker
-   ```
-2. Veriifcar que los **3 contenedores necesarios** esten corriendo apropiadamente.
-3. Tener añadido MongoEngine en requirements.txt
-4. Tener añadido el comando que ejecuta el servicio de mongo en el docker-compose.yaml
-   
----
+**Consultar, insertar, actualizar y eliminar datos con una sintaxis clara y orientada a objetos.
 
-## 🗃️ Descripción del Proceso
+**Mantener la lógica de negocio en Python sin tener que escribir comandos nativos de MongoDB.
 
-Al levantar el entorno por primera vez, el sistema precarga varias entidades en la base de datos PostgreSQL. También podremos añadir nuevos datos desde el panel de administrador de Django, o directamente desde la consola SQL de postgres.
-Una vez que los datos están listos,podremos hacer la migración a Mongo, tan solo ejecutando un script de python. Cada vez que queremos actulizar la base de datos documental,utilizaremos ese script, que hará una migración **incremental**, es decir, solo incluye los datos modificados.
+===================================================
+🔧 REQUISITOS PREVIOS
+===================================================
 
----
+Antes de realizar la migración, debemos asegurarnos de contar con lo siguiente:
 
-## 🚀 Comando para ejecutar la migración
+✔ Proyecto funcionando correctamente con Docker.
+✔ Los siguientes servicios deben estar levantados:
+    - manage (Django)
+    - db (PostgreSQL)
+    - mongo (MongoDB)
 
-Para ejecutar el proceso de migración, utilizar el siguiente comando en la raíz del proyecto:
-```bash
+✔ MongoEngine incluido en requirements.txt:
+    mongoengine>=0.27.0
+
+✔ El servicio de Mongo declarado en docker-compose.yml:
+    mongo:
+      image: mongo
+      ports:
+        - "27017:27017"
+
+
+===================================================
+ 🗂️ ESTRUCTURA DE ARCHIVOS UTILIZADOS
+===================================================
+
+    migrar_a_mongo/
+├── __init__.py
+    Archivo que convierte la carpeta en módulo de Python.
+
+├── modelos_mongo.py
+    Contiene las definiciones de documentos Mongo usando MongoEngine.
+    Ejemplo:
+        class VentaMongo(Document):
+            id_venta = StringField(required=True)
+            fecha = DateTimeField()
+            total = FloatField()
+            cliente = StringField()
+            meta = {'collection': 'venta'}
+
+├── utils.py
+    Funciones auxiliares para transformar los modelos de Django en objetos compatibles con Mongo.
+    Ejemplo: formatear fechas, calcular campos derivados.
+
+├── migrar_a_mongo.py
+    Script principal de migración.
+    - Conecta a Mongo.
+    - Consulta los modelos de Django (PostgreSQL).
+    - Verifica si los datos ya existen en Mongo.
+    - Si no existen, los inserta.
+
+===================================================
+ 🗃️ DESCRIPCIÓN DEL PROCESO
+===================================================
+Al levantar el entorno, se precargan varias entidades en la base de datos PostgreSQL mediante fixtures o datos insertados por Django.
+1. El entorno se levanta con:
+    docker compose up
+
+Podés agregar más datos desde:
+
+**El panel de administrador de Django.
+
+**La consola SQL de PostgreSQL.
+
+Cuando los datos estén listos para ser migrados, simplemente ejecutás un script Python que se encarga de transferirlos a MongoDB.
+Este script realiza una migración incremental: solo incluye los datos nuevos o modificados.
+
+===================================================
+🚀 COMANDO PARA EJECUTAR LA MIGRACIÓN
+===================================================
+
+Desde la raíz del proyecto, ejecutar:
+
 docker compose run --rm --entrypoint python3 manage /code/migrar_a_mongo/migrar_a_mongo.py
-```
 
----
+Este comando corre el script Python dentro del contenedor manage (Django).
 
-## 🔍 Visualizar los datos en Mongo
+===================================================
+📄 VISUALIZAR LOS DATOS EN MONGODB
+===================================================
 
-Entrar en la consola de mongo:
-```bash
+Ingresar al shell de MongoDB con:
+
 docker compose exec mongo mongosh
-```
-Mostrar las bases de datos:
-```bash
-show dbs
-```
-Entrar en una base de datos:
-```bash
-use cantina
-```
-Mostrar las colecciones de esa base de datos(el símil a las tablas en relacionales):
-```bash
-show collections
-```
-Mostrar todos los datos de esa colección:
-```bash
-db.venta.find()
-```
+
+Luego, ejecutar:
+
+> show dbs
+> use cantina
+> show collections
+> db.venta.find()
+
+===================================================
+✅ VENTAJAS DE MongoDB CON MONGOENGINE
+===================================================
+**Modelo flexible: No requiere esquemas estrictos; los documentos pueden tener estructuras distintas entre sí.
+
+**Ideal para datos no estructurados: Perfecto para almacenar JSONs anidados, arrays, o estructuras complejas.
+
+**Alta escalabilidad horizontal: Diseñado para crecer fácilmente con grandes volúmenes de datos y múltiples servidores.
+
+**Velocidad en lectura y escritura: Muy eficiente cuando no se requiere consistencia transaccional fuerte.
+
+**Desacoplamiento: Permite separar la lógica relacional (Django + PostgreSQL) del análisis o visualización documental.
+
+===================================================
+❌ DESVENTAJAS DE MongoDB CON MONGOENGINE
+===================================================
+**Sin integridad referencial: No hay claves foráneas ni restricciones entre documentos. La consistencia depende del código.
+
+**Menor robustez transaccional: No es lo ideal si necesitás múltiples operaciones atómicas entre documentos.
+
+**Más trabajo manual para relaciones: Si querés simular relaciones entre documentos, tenés que hacerlo desde el código.
+
+**Menor integración con Django nativo: No reemplaza el ORM de Django, sino que se usa por fuera para otras tareas.
+===================================================
+🔄 CONCLUSIÓN
+===================================================
+
+- El script puede ejecutarse múltiples veces sin duplicar datos.
+- Si se agregan modelos nuevos, deben reflejarse en modelos_mongo.py.
+- Usamos MongoEngine para tener validación de campos y consultas limpias.
+- Este enfoque permite mantener Mongo actualizado con PostgreSQL de manera controlada.
+
