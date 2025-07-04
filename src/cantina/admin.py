@@ -2,8 +2,6 @@ from django.contrib import admin
 from .models import Categoria, Producto, Venta, DetalleVenta, Empleado
 
 # Register your models here.
-from django.contrib import admin
-from .models import Categoria, Producto, Venta, DetalleVenta, Empleado
 
 #definimos esta clase que hereda la clase TabularInline
 #que permite mostrar un formulario en linea en el admin, en formato tabla para editar los detalles de venta)
