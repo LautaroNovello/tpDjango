@@ -68,7 +68,9 @@ class DetalleVenta(models.Model):
     #@property permite mostrar este metodo como atributo
     @property
     def total(self):
-        return(self.cantidad * self.precioHistorico)
+        if self.cantidad is None or self.precioHistorico is None:
+            return 0  # o None, si preferís dejarlo sin valor
+        return self.cantidad * self.precioHistorico
     def save(self, *args, **kwargs):
         # Solo si es un nuevo detalle (aún no guardado en la base) y no tiene precioHistorico asignado:
         if not self.pk and not self.precioHistorico:
